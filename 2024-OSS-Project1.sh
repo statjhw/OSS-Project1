@@ -8,8 +8,9 @@ fi
 
 echo "********OSS1 - Project1********"
 echo "*    StudentID : 12202051     *"
-echo "*    Name : Gildong Hong      *"
+echo "*    Name : Jang Hyeon Wu     *"
 echo "*******************************"
+
 
 stop="N"
 until [ "$stop" = "Y" ]
@@ -22,11 +23,23 @@ do
   echo "5. Get the modified format of date_GMT in matches.csv"
   echo "6. Get the data of the winning team by the largest difference on home stadium in teams.csv & matches.csv"
   echo "7. Exit"
-  read -p "Enter your CHOICE (1-7) : " choice
+  echo -n "Enter your CHOICE (1-7) : "
+  read choice
 
-  case "$choice" in
+  case "$choice" in 
+
     1)
-      read -p "Do you want to get the Heung-Min Son's data? (y/n) :" res
+      echo -n "Do you want to get the Heung-Min Son's data? (y/n) :" 
+      read res
       if [ $res = "y" ]
       then
         cat "$2" | awk -F, '$1=="Heung-Min Son" {printf("Team: %d, Apperance: %d, Goal: %d, Assist: %d\n", $4, $6, $7, $8)}'
+      fi 
+      ;;
+    2)
+      echo -n "What do you want to get the team data of league_position[1~20] : "
+      read res
+      
+      cat "$1" | awk -v a=$res -F, '$6==$a {print $6, $1, $2/($2+$3+$4)}'
+      ;;
+
