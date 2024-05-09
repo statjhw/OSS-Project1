@@ -9,13 +9,14 @@ fi
 echo "********OSS1 - Project1********"
 echo "*    StudentID : 12202051     *"
 echo "*    Name : Jang Hyeon Wu     *"
-echo "*******************************"
+echo "*******************************\n"
 
 
 stop="N"
 until [ "$stop" = "Y" ]
 do 
-  echo "MENU"
+   
+  echo "[MENU]"
   echo "1. Get the data of Heung-Min Son's Current Club, Apperances, Goals, Assists in players.csv"
   echo "2. Get the team data to enter a league position in teams.csv"
   echo "3. Get the Top-3 Attendance matches in matches.csv"
@@ -31,15 +32,36 @@ do
     1)
       echo -n "Do you want to get the Heung-Min Son's data? (y/n) :" 
       read res
+      
       if [ $res = "y" ]
       then
-        cat "$2" | awk -F, '$1=="Heung-Min Son" {printf("Team: %d, Apperance: %d, Goal: %d, Assist: %d\n", $4, $6, $7, $8)}'
+        cat "$2" | awk -F, '$1=="Heung-Min Son" {printf("Team: %s, Apperance: %d, Goal: %d, Assist: %d\n", $4, $6, $7, $8)}'
       fi 
       ;;
     2)
       echo -n "What do you want to get the team data of league_position[1~20] : "
       read res
       
-      cat "$1" | awk -v a=$res -F, '$6==$a {print $6, $1, $2/($2+$3+$4)}'
+      cat "$1" | awk -v a=$res -F, '$6==a {print $6, $1, $2/($2+$3+$4)}'
+      ;;
+    3)
+      echo -n "Do you want to know Top-3 attendance data and average attendance? (y/n) : "
+      read res
+
+      if [ $res = "y" ]
+      then
+        echo "***Top-3 Attendance Match***"
+        echo 
+        cat "$3" | sort -t ',' -n -r -k 2 | head -3 | awk -F, '{printf("%s vs %s (%s)\n%d %s\n\n", $3, $4, $1, $2, $7)}'
+      fi
       ;;
 
+
+
+    7) 
+    echo "Bye!"
+    stop="Y"
+    ;;
+    esac
+    echo
+done
