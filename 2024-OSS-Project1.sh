@@ -1,4 +1,4 @@
-#! /bin/zsh
+#! /bin/bash
 
 if [ $# -ne 3 ] 
 then
@@ -9,7 +9,8 @@ fi
 echo "********OSS1 - Project1********"
 echo "*    StudentID : 12202051     *"
 echo "*    Name : Jang Hyeon Wu     *"
-echo "*******************************\n"
+echo "*******************************"
+echo
 
 
 stop="N"
@@ -30,7 +31,7 @@ do
   case "$choice" in 
 
     1)
-      echo -n "Do you want to get the Heung-Min Son's data? (y/n) :" 
+      echo -n "Do you want to get the Heung-Min Son's data? (y/n) : " 
       read res
       
       if [ $res = "y" ]
@@ -45,7 +46,7 @@ do
       cat "$1" | awk -v a=$res -F, '$6==a {print $6, $1, $2/($2+$3+$4)}'
       ;;
     3)
-      echo -n "Do you want to know Top-3 attendance data and average attendance? (y/n) : "
+      echo -n "Do you want to know Top-3 attendance data (y/n) : "
       read res
 
       if [ $res = "y" ]
@@ -82,36 +83,9 @@ do
       read res
       if [ $res = "y" ] 
       then
-
-        function str_to_num() {
-          case $1 in
-            Jan) echo "01" ;;
-            Feb) echo "02" ;;
-            Mar) echo "03" ;;
-            Apr) echo "04" ;;
-            May) echo "05" ;;
-            Jun) echo "06" ;;
-            Jul) echo "07" ;;
-            Aug) echo "08" ;;
-            Sep) echo "09" ;;
-            Oct) echo "10" ;;
-            Nov) echo "11" ;;
-            Dec) echo "12" ;;
-          esac
-        }
-       
-        for i in $(seq 2 11) 
-        do 
-          info=$(cat "$3" | awk -v a=$i -F, 'NR == a {print $1}')
-          month=$(echo $info | cut -d" " -f1)
-          month_num=$(str_to_num $month)
-          day=$(echo $info | cut -d" " -f2)
-          year=$(echo $info | cut -d" " -f3)
-          hour_min=$(echo $info | cut -d" " -f5)
-
-          echo "$year/$month_num/$day $hour_min"
-        done
-      echo 
+      cat "$3" | awk -F, 'NR != 1 && NR <= 11 {print $1}' | sed -E 's/Jan/01/;s/Feb/02/;s/Mar/03/;s/Apr/04/;s/May/05/;s/Jun/06/;s/Jul/07/;s/Aug/08/;s/Sep/09/;s/Oct/10/;s/Nov/11/;s/Dec/12/' | awk '{printf("%d/%d/%d %s\n",$3, $1, $2, $5)}'
+      echo
+        
       fi 
       ;;
     6) 
