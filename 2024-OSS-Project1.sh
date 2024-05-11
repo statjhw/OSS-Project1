@@ -75,8 +75,45 @@ do
 
         done
       fi
-      ;; 
+      ;;
     
+    5)
+      echo -n "Do you want to modify the format of date? (y/n) : "
+      read res
+      if [ $res = "y" ] 
+      then
+
+        function str_to_num() {
+          case $1 in
+            Jan) echo "01" ;;
+            Feb) echo "02" ;;
+            Mar) echo "03" ;;
+            Apr) echo "04" ;;
+            May) echo "05" ;;
+            Jun) echo "06" ;;
+            Jul) echo "07" ;;
+            Aug) echo "08" ;;
+            Sep) echo "09" ;;
+            Oct) echo "10" ;;
+            Nov) echo "11" ;;
+            Dec) echo "12" ;;
+          esac
+        }
+       
+        for i in $(seq 2 11) 
+        do 
+          info=$(cat "$3" | awk -v a=$i -F, 'NR == a {print $1}')
+          month=$(echo $info | cut -d" " -f1)
+          month_num=$(str_to_num $month)
+          day=$(echo $info | cut -d" " -f2)
+          year=$(echo $info | cut -d" " -f3)
+          hour_min=$(echo $info | cut -d" " -f5)
+
+          echo "$year/$month_num/$day $hour_min"
+        done
+      echo 
+      fi 
+      ;;
     6) 
       echo "1) Arsenal                  11) Liverpool"
       echo "2) Tottenham Hotspur        12) Chelsea"
