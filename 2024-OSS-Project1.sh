@@ -55,19 +55,26 @@ do
         cat "$3" | sort -t ',' -n -r -k 2 | head -3 | awk -F, '{printf("%s vs %s (%s)\n%d %s\n\n", $3, $4, $1, $2, $7)}'
       fi
       ;;
-    4)
-      for i in $ (seq 1 20)
-      do
-        team=$(cat "$1" | awk -v rank=$i -F, '$6==rank {print $1}')
-        echo "$i $team"
-        pg=$(cat "$2" | awk -v a=$team -F, '$4==a {print $1, $7}' | sort -r -k 2)
-      done  
-      ;;
     
-    5) 
-      echo - n "Do you want to modify the format of date? (y/n) : "
+    4) 
+      echo -n "Do you want to get each team's ranking and the highest-scoring player? (y/n) : "
       read res
+      echo 
 
+      if [ $res = "y" ] 
+      then 
+        IFS=$'\n'
+        for var in $(cat "$1" | sort -t ',' -n -k 6 | awk -F, 'NR != 1 {print $1}') 
+        do 
+          rank=$(cat "$1" | awk -v r=$var -F, '$1==r {print $6}')
+          info=$(cat "$2" | awk -v a=$var -F, '$4==a {print $7}' | sort -n -r | head -1)
+
+          echo "$rank $var"
+          cat "$2" | awk -v t=$var -v m=$info -F, '$4==t && $7==m {print $1, $7}'
+          echo 
+
+        done
+      fi
       ;; 
     
     6) 
@@ -88,7 +95,6 @@ do
       team=$(cat "$1" | awk -v i=$n -F, 'NR==i+1 {print $1}')
       max=$(cat "$3" | awk -v t=$team -F, '$3==t {print $5 - $6}' | sort -n -r | head -1)
       cat "$3" | awk -v t=$team -v m=$max -F, '$3==t && $5-$6==m {printf("%s\n%s %d vs %d %s\n\n", $1, $3, $5, $6, $4)}'
-
       ;;
 
     7) 
